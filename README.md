@@ -117,3 +117,6 @@ This REST API provides the following operations:
         }
     ]
     ```
+
+## POSTMAN Testing: 
+https://www.postman.com/technical-cosmologist-79040812/workspace/rest-apis-course-project/overview
