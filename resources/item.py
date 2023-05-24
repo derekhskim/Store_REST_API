@@ -12,7 +12,7 @@ blp = Blueprint("Items", __name__, description="Operations on items")
 
 @blp.route("/item/<string:item_id>")
 class Item(MethodView):
-
+    @blp.response(200, ItemSchema)
     # GET - Retrieve Specific Item
     def get(self, item_id):
         try: 
@@ -30,6 +30,7 @@ class Item(MethodView):
 
     # UPDATE - Update an Item
     @blp.arguments(ItemUpdateSchema)
+    @blp.response(200, ItemSchema)
     def put(self, item_data, item_id):
         try:
             item = items[item_id]
@@ -44,11 +45,13 @@ class Item(MethodView):
 class ItemList(MethodView):
 
     # GET - Get All Items
+    @blp.response(200, ItemSchema(many=True))
     def get(self):
-        return {"items": list(items.values())}
+        return items.values()
 
     # POST - Create an Item
     @blp.arguments(ItemSchema)
+    @blp.response(201, ItemSchema)
     def post(self, item_data):
         for item in items.values():
             if (
@@ -61,4 +64,4 @@ class ItemList(MethodView):
         item = {**item_data, "id": item_id}
         items[item_id] = item
 
-        return item, 201
+        return item
