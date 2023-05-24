@@ -12,8 +12,9 @@ This REST API provides the following operations:
 4. **Delete a Store:** Delete a specific store by providing its ID.
 5. **Retrieve All Items:** Retrieve a list of all items.
 6. **Retrieve a Specific Item:** Retrieve the details of a specific item by providing its ID.
-7. **Delete an Item:** Delete a specific item by providing its ID.
-8. **Update an Item:** Update the details of a specific item by providing its ID and the updated details.
+7. **Create an Item:** You can create an item by providing name, price and store's ID.
+8. **Delete an Item:** Delete a specific item by providing its ID.
+9. **Update an Item:** Update the details of a specific item by providing its ID and the updated details.
 
 ## API Endpoints and Usage
 
@@ -72,6 +73,31 @@ This REST API provides the following operations:
         "name": "My Store",
         "id": "<store_id>",
         "items": []
+    }
+    ```
+
+**Create an Item**
+
+- **Request:**
+
+    `POST /item`
+
+    ```json
+    {
+        "name": "Chair",
+        "price": 175.50,
+        "store_id": "<store_id>"
+    }
+    ```
+
+- **Response:**
+
+    ```json
+    {
+        "name": "Chair", 
+        "price": 175.50,
+        "store_id": "<store_id>",
+        "id": "<generated_item_id>"
     }
     ```
 
