@@ -1,4 +1,4 @@
-# My First REST API
+# Store REST API
 
 This project showcases a REST API that enables store and item management operations. It enables the creation, retrieval, and deletion of stores and items.
 
