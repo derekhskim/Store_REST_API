@@ -17,30 +17,20 @@ class Item(MethodView):
     @blp.response(200, ItemSchema)
     # GET - Retrieve Specific Item
     def get(self, item_id):
-        try: 
-            return items[item_id]
-        except KeyError:
-            abort(404, message="Item not found.")
+        item = ItemModel.query.get_or_404(item_id)
+        return item
 
     # DELETE - Delete an Item
     def delete(self, item_id):
-        try:
-            del items[item_id]
-            return {"message": "Item was successfully deleted."}
-        except KeyError:
-            abort(404, message="Item not found.")
+        item = ItemModel.query.get_or_404(item_id)
+        raise NotImplementedError("Deleting an item is not implemented.")
 
     # UPDATE - Update an Item
     @blp.arguments(ItemUpdateSchema)
     @blp.response(200, ItemSchema)
     def put(self, item_data, item_id):
-        try:
-            item = items[item_id]
-            item |= item_data
-
-            return item
-        except KeyError:
-            abort(404, message="Item not found.")
+        item = ItemModel.query.get_or_404(item_id)
+        raise NotImplementedError("Updating an item is not implemented.")
 
 
 @blp.route("/item")
@@ -61,6 +51,6 @@ class ItemList(MethodView):
             db.session.add(item)
             db.session.commit()
         except SQLAlchemyError:
-            abort(500, message="An error occurred while inserting the item.")
+            abort(500, message="An error occurred while inserting  the item.")
 
         return item
