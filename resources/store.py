@@ -35,7 +35,7 @@ class StoreList(MethodView):
     # GET - Retrieve All Stores and Their Items
     @blp.response(200, StoreSchema(many=True))
     def get(self):
-        return stores.values()
+        return StoreModel.query.all()
     
     # POST - Create a Store
     @blp.arguments(StoreSchema)
