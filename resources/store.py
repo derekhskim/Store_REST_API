@@ -19,7 +19,7 @@ class Store(MethodView):
     # GET - Retrieve a Particular Store
     @blp.response(200, StoreSchema)
     def get(self, store_id):
-        store = StoreModel.get_or_404(store_id)
+        store = StoreModel.query.get_or_404(store_id)
         return store
    
     # DELETE - Delete a Store
