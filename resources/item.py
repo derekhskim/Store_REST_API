@@ -57,7 +57,7 @@ class ItemList(MethodView):
         return ItemModel.query.all()
 
     # POST - Create an Item
-    @jwt_required()
+    @jwt_required(fresh=True)
     @blp.arguments(ItemSchema)
     @blp.response(201, ItemSchema)
     def post(self, item_data): 
