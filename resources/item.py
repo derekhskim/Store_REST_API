@@ -12,7 +12,7 @@ from schemas import ItemSchema, ItemUpdateSchema
 blp = Blueprint("Items", __name__, description="Operations on items")
 
 
-@blp.route("/item/<string:item_id>")
+@blp.route("/item/<int:item_id>")
 class Item(MethodView):
     @blp.response(200, ItemSchema)
     # GET - Retrieve Specific Item
@@ -36,7 +36,7 @@ class Item(MethodView):
             item.price = item_data["price"]
             item.name = item_data["name"]
         else:
-            item = ItemModel(id=int(item_id), **item_data)
+            item = ItemModel(id=item_id, **item_data)
 
         db.session.add(item)
         db.session.commit()
