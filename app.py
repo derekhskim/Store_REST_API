@@ -4,6 +4,7 @@ from flask import Flask, jsonify
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from dotenv import load_dotenv
 
 from db import db
 from blocklist import BLOCKLIST
@@ -15,6 +16,7 @@ from resources.user import blp as UserBluePrint
 
 def create_app(db_url=None):
     app = Flask(__name__)
+    load_dotenv()
 
     app.config["PROPAGATE_EXEPTIONS"] = True
     app.config["API_TITLE"] = "Stores REST API"
@@ -24,7 +26,10 @@ def create_app(db_url=None):
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
     app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
-    if os.environ.get("FLASK_ENV") == "production":
+    db_url = os.environ.get("DATABASE_URL")
+    if db_url:
+        app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+    elif os.environ.get("FLASK_ENV") == "production":
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///instance/data.db"
     else:
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
