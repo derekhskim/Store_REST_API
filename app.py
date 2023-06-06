@@ -23,11 +23,11 @@ def create_app(db_url=None):
     app.config["OPENAPI_URL_PREFIX"] = "/"
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
     app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
-    
+
     if os.environ.get("FLASK_ENV") == "production":
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///instance/data.db"
     else:
-        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"    
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
     
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
