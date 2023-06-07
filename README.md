@@ -2,23 +2,36 @@
 
 This project showcases a REST API that enables store and item management operations. It enables the creation, retrieval, and deletion of stores and items.
 
-## Features
+## Key Features
 
-This REST API provides the following operations:
+- User authentication using JWT tokens
+- CRUD operations on stores, items, and tags
+- Ability to add and remove tags from items
+- Asynchronous email notifications upon user registration
+- Error handling for JWT token-related issues (expiry, invalidity, etc.)
 
-1. **Create a Store:** You can create a new store by providing its name.
-2. **Retrieve All Stores:** Retrieve a list of all the stores along with the items they stock.
-3. **Retrieve a Specific Store:** Retrieve the details of a specific store along with the items it stocks, by providing the store's ID.
-4. **Delete a Store:** Delete a specific store by providing its ID.
-5. **Retrieve All Items:** Retrieve a list of all items.
-6. **Retrieve a Specific Item:** Retrieve the details of a specific item by providing its ID.
-7. **Create an Item:** You can create an item by providing name, price and store's ID.
-8. **Delete an Item:** Delete a specific item by providing its ID.
-9. **Update an Item:** Update the details of a specific item by providing its ID and the updated details.
+## Main Modules
 
-## API Endpoints and Usage
+### Models
 
-**Create a Store**
+- `ItemModel`: Represents an item with unique name, description, price, and associated store.
+- `ItemTags`: Represents a many-to-many relationship between items and tags.
+- `StoreModel`: Represents a store with a unique name and associated items and tags.
+- `TagModel`: Represents a tag with a unique name and associated items.
+- `UserModel`: Represents a user with a unique username and email, and an encrypted password.
+
+### Resources
+
+- `item`: Allows CRUD operations on items. All operations require user authentication.
+- `store`: Allows CRUD operations on stores. All operations require user authentication.
+- `tag`: Allows adding and removing tags from items. Also allows retrieving all tags associated with a store and deleting a tag if it's not associated with any items.
+- `user`: Handles user registration and login.
+
+# API Documentation
+
+## Endpoints and Usage
+
+### Create a Store
 
 - **Request:**
 
@@ -34,12 +47,20 @@ This REST API provides the following operations:
 
     ```json
     {
+        "id": "<generated_store_id>",
+        "items": [
+            {
+                "id": <item_id>,
+                "name": "Your Item",
+                "price": Item Price
+            }
+        ], 
         "name": "My Store", 
-        "id": "<generated_store_id>"
+        "tags": []
     }
     ```
 
-**Retrieve All Stores and Their Items**
+### Retrieve All Stores and Their Items
 
 - **Request:**
 
@@ -49,18 +70,20 @@ This REST API provides the following operations:
 
     ```json
     {
-        "stores": [
+        "id": "<generated_store_id>",
+        "items": [
             {
-                "name": "My Store",
-                "id": "<store_id>",
-                "items": []
+                "id": <item_id>,
+                "name": "Your Item",
+                "price": Item Price
             }
-            // ... additional stores
-        ]
+        ],
+        "name": "My Store", 
+        "tags": []
     }
     ```
 
-**Retrieve a Specific Store**
+### Retrieve a Specific Store
 
 - **Request:**
 
@@ -70,23 +93,28 @@ This REST API provides the following operations:
 
     ```json
     {
-        "name": "My Store",
-        "id": "<store_id>",
-        "items": []
+        "id": "<generated_store_id>",
+        "items": [
+            {
+                "id": <item_id>,
+                "name": "Your Item",
+                "price": Item Price
+            }
+        ], 
+        "name": "My Store", 
+        "tags": []
     }
     ```
 
-**Create an Item**
+### Update a Store
 
 - **Request:**
 
-    `POST /item`
+    `PUT /store/<store_id>`
 
     ```json
     {
-        "name": "Chair",
-        "price": 175.50,
-        "store_id": "<store_id>"
+        "name": "New Store Name"
     }
     ```
 
@@ -94,14 +122,20 @@ This REST API provides the following operations:
 
     ```json
     {
-        "name": "Chair", 
-        "price": 175.50,
-        "store_id": "<store_id>",
-        "id": "<generated_item_id>"
+        "id": "<generated_store_id>",
+        "items": [
+            {
+                "id": <item_id>,
+                "name": "Your Item",
+                "price": Item Price
+            }
+        ], 
+        "name": "New Store Name", 
+        "tags": []
     }
     ```
 
-**Delete a Store**
+### Delete a Store
 
 - **Request:**
 
@@ -111,11 +145,40 @@ This REST API provides the following operations:
 
     ```json
     {
-        "message": "Store was successfully deleted."
+        "message": "Store deleted."
     }
     ```
 
-**Retrieve All Items**
+### Create an Item
+
+- **Request:**
+
+    `POST /item`
+
+    ```json
+    {
+        "name": "Item Name",
+        "price": Item Price,
+        "store_id": "<store_id>"
+    }
+    ```
+
+- **Response:**
+
+    ```json
+    {
+        "id": <generated_item_id>,
+        "name": "Item Name",
+        "price": Item Price,
+        "store": {
+            "id": <store_id>,
+            "name": "Store Name"
+        },
+        "tags": []
+    }
+    ```
+
+### Retrieve All Items
 
 - **Request:**
 
@@ -125,13 +188,18 @@ This REST API provides the following operations:
 
     ```json
     {
-        "items": [
-            // ... list of items
-        ]
+        "id": <item_id>,
+        "name": "Item Name",
+        "price": Item Price,
+        "store": {
+            "id": <store_id>,
+            "name": "Store Name"
+        },
+        "tags": []
     }
     ```
 
-**Retrieve a Specific Item**
+### Retrieve a Specific Item
 
 - **Request:**
 
@@ -141,13 +209,47 @@ This REST API provides the following operations:
 
     ```json
     {
-        "name": "<item_name>", 
-        "price": "<item_price>", 
-        "id": "<item_id>"
+        "id": <item_id>,
+        "name": "Item Name",
+        "price": Item Price,
+        "store": {
+            "id": <store_id>,
+            "name": "Store Name"
+        },
+        "tags": []
     }
     ```
 
-**Delete an Item**
+### Update an Item
+
+- **Request:**
+
+    `PUT /item/<item_id>`
+
+    ```json
+    {
+        "name": "New Name", 
+        "price": New Price,
+        "store_id": <store_id>
+    }
+    ```
+
+- **Response:**
+
+    ```json
+    {
+        "id": <item_id>,
+        "name": "New Name",
+        "price": New Price,
+        "store": {
+            "id": <store_id>,
+            "name": "Store Name"
+        },
+        "tags": []
+    }
+    ```
+
+### Delete an Item
 
 - **Request:**
 
@@ -157,20 +259,21 @@ This REST API provides the following operations:
 
     ```json
     {
-        "message": "Item was successfully deleted."
+        "message": "Item deleted."
     }
     ```
-
-**Update an Item**
+    
+### User Registration
 
 - **Request:**
 
-    `PUT /item/<item_id>`
+    `POST /register`
 
     ```json
     {
-        "name": "New Name", 
-        "price": "<new_price>"
+        "username": "noobietubie",
+        "email": "noobie@example.com",
+        "password": "password123"
     }
     ```
 
@@ -178,11 +281,254 @@ This REST API provides the following operations:
 
     ```json
     {
-        "name": "New Name", 
-        "price": "<new_price>", 
-        "id": "<item_id>"
+        "message": "User created successfully."
     }
     ```
+
+### User Login
+
+- **Request:**
+
+    `POST /login`
+
+    ```json
+    {
+        "username": "noobietubie",
+        "password": "password123"
+    }
+    ```
+
+- **Response:**
+
+    ```json
+    {
+        "access_token": "<access_token>",
+        "refresh_token": "<refresh_token>"
+    }
+    ```
+
+### Token Refresh
+
+- **Request:**
+
+    `POST /refresh`
+
+- **Response:**
+
+    ```json
+    {
+        "access_token": "<new_access_token>"
+    }
+    ```
+
+### User Logout
+
+- **Request:**
+
+    `POST /logout`
+
+- **Response:**
+
+    ```json
+    {
+        "message": "Successfully logged out."
+    }
+    ```
+
+### Retrieve a Specific User
+
+- **Request:**
+
+    `GET /user/<user_id>`
+
+- **Response:**
+
+    ```json
+    {
+        "id": "<user_id>",
+        "username": "noobie"
+    }
+    ```
+
+### Delete a User
+
+- **Request:**
+
+    `DELETE /user/<user_id>`
+
+- **Response:**
+
+    ```json
+    {
+        "message": "User deleted."
+    }
+    ```
+
+### Create a Tag in a Store
+
+- **Request:**
+
+    `POST /store/<store_id>/tag`
+
+    ```json
+    {
+        "name": "Tag Name"
+    }
+    ```
+
+- **Response:**
+
+    ```json
+    {
+        "id": <tag_id>,
+        "items": [
+            {
+                "id": <item_id>,
+                "name": "Your Item",
+                "price": Item Price
+            }
+        ],
+        "name": "Tag name",
+        "store": {
+            "id": <store_id>,
+            "name": "Store Name"
+        }
+    }
+    ```
+    
+### Retrieve a Specific Tag
+
+- **Request:**
+
+    `GET /tag/<tag_id>`
+
+- **Response:**
+
+    ```json
+    {
+        "id": <tag_id>,
+        "items": [
+                {
+                    "id": <item_id>,
+                    "name": "Your Item",
+                    "price": Item Price
+                }
+            ],
+        "name": "Tag name",
+        "store": {
+            "id": <store_id>,
+            "name": "Store Name"
+        }
+    }
+    ```
+
+### Retrieve Tags in a Store
+
+- **Request:**
+
+    `GET /store/<store_id>/tag`
+
+- **Response:**
+
+    ```json
+    {
+        "id": <tag_id>,
+        "items": [
+            {
+                "id": <item_id>,
+                "name": "Your Item",
+                "price": Item Price
+            }
+        ],
+        "name": "Tag name",
+        "store": {
+            "id": <store_id>,
+            "name": "Store Name"
+        }
+    }
+    ```
+
+### Link Tags to an Item
+
+- **Request:**
+
+    `POST /item/<item_id>/tag/<tag_id>`
+
+- **Response:**
+
+    ```json
+    {
+        "id": <tag_id>,
+        "items": [
+            {
+                "id": <item_id>,
+                "name": "Your Item",
+                "price": Item Price
+            }
+        ],
+        "name": "Tag name",
+        "store": {
+            "id": <store_id>,
+            "name": "Store Name"
+        }
+    }
+    ```
+
+### Remove Tags from an Item
+
+- **Request:**
+
+    `DELETE /item/<item_id>/tag/<tag_id>`
+
+- **Response:**
+
+    ```json
+    {
+        "item": {
+            "id": <item_id>,
+            "name": "Your Item",
+            "price": Item Price,
+            "store": {
+                "id": <store_id>,
+                "name": "Store Name"
+            },
+            "tags": []
+        },
+        "message": "Item removed from tag",
+        "tag": {
+            "id": <tag_id>,
+            "items": [
+                {
+                    "id": <item_id>,
+                    "name": "Your Item",
+                    "price": Item Price
+                }
+            ],
+            "name": "Tag name",
+            "store": {
+                "id": <store_id>,
+                "name": "Store Name"
+            }
+        }
+    }
+    ```
+
+### Delete a Tag
+
+- **Request:**
+
+    `DELETE /tag/<tag_id>`
+
+- **Response:**
+
+    ```json
+    {
+        "message": "Tag deleted."
+    }
+    ```
+    
+## Deployment Information
+
 
 ## POSTMAN Testing: 
 [Postman Workspace Link](https://www.postman.com/technical-cosmologist-79040812/workspace/rest-apis-course-project/overview)
