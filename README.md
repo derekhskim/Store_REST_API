@@ -27,6 +27,19 @@ This project showcases a REST API that enables store and item management operati
 - `tag`: Allows adding and removing tags from items. Also allows retrieving all tags associated with a store and deleting a tag if it's not associated with any items.
 - `user`: Handles user registration and login.
 
+## Deployment Information
+The application has been deployed using the following services:
+
+- **Database**: PostgreSQL hosted on ElephantSQL
+- **Backend**: Deployed on render.com
+- **Mail Services**: Utilizing Mailgun for email functionality
+- **Swagger API**: [Swagger Documentation](https://store-rest-api-f4yf.onrender.com/swagger-ui)
+
+You can test things with the link: https://store-rest-api-f4yf.onrender.com/ or use provided Postman Workspace link below.
+
+## POSTMAN Testing: 
+[Postman Workspace Link](https://www.postman.com/technical-cosmologist-79040812/workspace/rest-apis-course-project/overview)
+
 # API Documentation
 
 ## Endpoints and Usage
@@ -526,9 +539,3 @@ This project showcases a REST API that enables store and item management operati
         "message": "Tag deleted."
     }
     ```
-    
-## Deployment Information
-
-
-## POSTMAN Testing: 
-[Postman Workspace Link](https://www.postman.com/technical-cosmologist-79040812/workspace/rest-apis-course-project/overview)
