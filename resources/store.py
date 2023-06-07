@@ -7,7 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
 from models import StoreModel
-from schemas import StoreSchema
+from schemas import StoreSchema, StoreUpdateSchema
 
 
 blp = Blueprint("stores", __name__, description="Operations on stores")
@@ -22,6 +22,24 @@ class Store(MethodView):
     def get(self, store_id):
         store = StoreModel.query.get_or_404(store_id)
         return store
+    
+    
+     # UPDATE - Update a Store
+    @jwt_required()
+    @blp.arguments(StoreUpdateSchema)
+    @blp.response(200, StoreSchema)
+    def put(self, store_data, store_id):
+        store = StoreModel.query.get(store_id)
+        if store:
+            store.name = store_data["name"]
+        else:
+            store = StoreModel(id=store_id, **store_data)
+
+        db.session.add(store)
+        db.session.commit()
+
+        return store
+    
    
     # DELETE - Delete a Store
     @jwt_required()
